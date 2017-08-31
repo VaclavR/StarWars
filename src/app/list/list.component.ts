@@ -10,10 +10,11 @@ import { ActivatedRoute } from '@angular/router';
 export class ListComponent implements OnInit, OnDestroy {
 
   swService: StarwarsService;
-  people = [];
+  items = [];
   subscription;
   page = 1;
   pages = [];
+  dataType = 'people';
   activatedRoute: ActivatedRoute;
 
   constructor(swService: StarwarsService, activatedRoute: ActivatedRoute) {
@@ -22,10 +23,17 @@ export class ListComponent implements OnInit, OnDestroy {
    }
 
   ngOnInit() {
-    this.swService.fetchData(this.page);
+     this.activatedRoute.params.subscribe(
+      (params) => {
+        this.page = 1;
+        this.dataType = params.dataType;
+        this.swService.fetchData(this.dataType, this.page);
+      }
+    );
+    this.swService.fetchData(this.dataType, this.page);
     this.subscription = this.swService.signal.subscribe(
       () => {
-        this.people = this.swService.showPeople();
+        this.items = this.swService.showItems();
         this.pages = this.swService.passPages();
     });
   }
@@ -36,15 +44,15 @@ export class ListComponent implements OnInit, OnDestroy {
 
   loadNextPage() {
     this.page++;
-    this.swService.fetchPeople(this.page);
+    this.swService.fetchData(this.dataType, this.page);
   }
   loadPreviousPage() {
     this.page--;
-    this.swService.fetchPeople(this.page);
+    this.swService.fetchData(this.dataType, this.page);
   }
   jumpOnPage(number) {
     this.page = number;
-    this.swService.fetchPeople(this.page);
+    this.swService.fetchData(this.dataType, this.page);
   }
 
 }

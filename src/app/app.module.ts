@@ -11,10 +11,11 @@ import { ItemComponent } from './list/item/item.component';
 import { StarwarsService } from './starwars.service';
 
 const routes = [
-  { path: '', component: TabsComponent, children: [
+  { path: 'data', component: TabsComponent, children: [
     { path: '', redirectTo: 'people', pathMatch: 'full' },
-    { path: ':side', component: ListComponent }
-  ] }
+    { path: ':dataType', component: ListComponent }
+  ] },
+  { path: '**', redirectTo: '/data/people' }
 ];
 
 @NgModule({
